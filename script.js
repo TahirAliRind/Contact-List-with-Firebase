@@ -3,8 +3,12 @@ const todoNumberInput = document.getElementById('todo-input2');
 const addBtn = document.getElementById('add-btn');
 const taskList = document.getElementById('task-list');
 
+
+
+
 function addTask() {
 
+    
     const taskText = todoInput.value.trim();
     const taskNumber = todoNumberInput.value.trim();
 
@@ -16,8 +20,8 @@ function addTask() {
     var li = document.createElement('li');
     li.className = 'task-item';
 
-    const span = document.createElement('span');
-    const numberSpan = document.createElement('span');
+    var span = document.createElement('span');
+    var numberSpan = document.createElement('span');
     numberSpan.className = 'task-number';
     numberSpan.innerText = taskNumber;
     
@@ -25,10 +29,24 @@ function addTask() {
     span.innerText = taskText;
     li.append(span, numberSpan);
 
-    const actionsDiv = document.createElement('div');
+    
+   
+
+
+    
+
+
+
+
+
+
+
+
+
+      var actionsDiv = document.createElement('div');
     actionsDiv.className = 'task-actions';
 
-    const editBtn = document.createElement('button');
+    var editBtn = document.createElement('button');
     editBtn.className = 'edit-btn';
     editBtn.innerText = 'Edit';
 
@@ -94,7 +112,10 @@ function addTask() {
     };
 
     taskList.appendChild(li);
-    UploadOnFirebase();
+
+
+
+       UploadOnFirebase();
 
 }
 
@@ -189,3 +210,53 @@ async function DeleteFromFirebase(liElement) {
         console.error("Firebase delete failed:", error);
     }
 }
+
+
+
+
+function fetchAllTodos()  {
+
+      const todoRef = firebase.database().ref('NewTodo');
+      todoRef.once('value')
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          
+          
+          snapshot.forEach((childSnapshot) => {
+            
+            const todoKey = childSnapshot.key;    
+            const todoData = childSnapshot.val();
+            
+            console.log("Todo ID: ", todoKey);
+            console.log("Todo Data: ", todoData);
+
+
+var li = document.createElement('li');
+    li.className = 'task-item';
+
+    var span = document.createElement('span');
+    var numberSpan = document.createElement('span');
+    numberSpan.className = 'task-number';
+    numberSpan.innerText = todoData.number;
+    
+    span.className = 'task-text';
+    span.innerText = todoData.span;
+    li.append(span, numberSpan);
+
+taskList.appendChild(li);
+
+
+             });
+
+        } else {
+          console.log("NewTodo folder me koi data nahi mila.");
+        }
+      })
+      .catch((error) => {
+        console.error("Data fetch karne me error aya:", error);
+      });
+      
+}
+
+
+fetchAllTodos();
